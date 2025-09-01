@@ -1,0 +1,9 @@
+# Ignorar archivos grandes de datos
+*.csv
+*.zip
+*.tar.gz
+*.h5
+*.pkl
+
+# Ignorar carpetas de datos crudos
+data/raw/*
