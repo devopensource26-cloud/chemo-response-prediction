@@ -1,0 +1,82 @@
+---
+title: "Data_filtering_GEO"
+format: html
+editor: visual
+---
+
+```{r}
+library(hgu133a.db)
+library(AnnotationDbi)
+library(GEOquery)
+```
+
+```{r}
+# Read directly from GEO 
+gse <- getGEO("GSE25065", GSEMatrix = TRUE)
+
+gse[[1]] # Expression set
+```
+
+```{r}
+eset <- gse[[1]] #Expression set extraction
+pheno <- pData(eset) #Phenotypic data extraction
+expr_matrix <- exprs(eset) #Probes data extraction
+```
+
+```{r}
+dim(expr_matrix) #Shape of probes data
+expr_matrix[1:5, 1:5]   #A look at gene expression data
+```
+
+```{r}
+expr_df <- as.data.frame(t(expr_matrix)) #Convert to data frame and transpose it
+```
+
+```{r}
+probe_ids <- colnames(expr_df)#ID Probes 
+
+#Map the gene symbol associated with each probe name
+gene_symbols <- mapIds(hgu133a.db, 
+                       keys = probe_ids,
+                       column = "SYMBOL",
+                       keytype = "PROBEID",
+                       multiVals = "first") 
+colnames(expr_df) <- gene_symbols #Replace probes name with gen Symbols
+```
+
+```{r}
+colnames(pheno) #Read the characteristics of the phenotypic data
+
+
+grupo <- pheno$characteristics_ch1.10 #Elegir la caracteristica a analizar
+
+
+grupo_binario <- ifelse(grepl("pCR", grupo), 1, 0) 
+#In the study, treatment response was selected
+#Classes were dichotomized: pCR = 1 and RD = 0
+
+dataset_final <- cbind(expr_df, Response = grupo_binario) #Crear un dataset final que combine los datos de expresión génica y la etiqueta de respuesta al tratamiento
+sum(is.na(dataset_final))#Look for NAs
+```
+
+```{r}
+Select_genes<-read.csv("C:/Users/Rodrigo/OneDrive/Escritorio/Proyectos/ML/ACTUALIZADO_selected_features_priority_0.6.csv")
+#Genes selected for machine learning models after dimensionality reduction
+
+genes_lista <- Select_genes$selected_features
+genes_expr <- colnames(dataset_final)
+```
+
+```{r}
+genes_comunes <- intersect(genes_lista, genes_expr) #Genes in common
+length(genes_comunes) #Numbers of genes in common
+```
+
+```{r}
+expr_filtrado <- dataset_final[, c(genes_comunes, "Response")]
+dim(expr_filtrado)
+
+#As the final outcome, a dataset was generated containing gene expression samples and response labels from the GSE25065 project, filtered by a set of selected genes derived from the GSE205568 project.
+
+#This procedure can be used to make data from different projects compatible, allowing it to serve either as a validation cohort for machine learning models or to expand the training and testing datasets for model development.
+```
