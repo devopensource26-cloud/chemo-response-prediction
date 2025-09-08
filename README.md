@@ -15,7 +15,6 @@ This repository contains code, notebooks, and model artifacts for a project that
 * [Expected outputs & artifacts](#expected-outputs--artifacts)
 * [Usage examples (CLI)](#usage-examples-cli)
 * [Good practices and notes](#good-practices-and-notes)
-* [Contact / Issues](#contact--issues)
 
 ---
 
