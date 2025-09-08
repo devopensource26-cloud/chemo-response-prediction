@@ -22,8 +22,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedShuffleSplit
 
 # ========================== Configuración ==========================
-data_path = Path(r"C:\Users\axime\Downloads\nueva_data\nueva_data\data_GSE205568_mapped_clean.csv")
-priority_path = Path(r"C:\Users\axime\Downloads\nueva_data\nueva_data\genes_with_priority_variants.csv")
+data_path = Path("./data/processed/data_GSE205568_mapped_clean.csv")
+priority_path = Path("./data/processed/genes_with_priority_variants.csv")
 
 N_RESAMPLES   = 60
 SAMPLE_FRAC   = 0.7
@@ -175,7 +175,7 @@ if __name__ == "__main__":
     )
 
     # Guardar resultados
-    freq.to_csv("stability_frequencies_priority7.csv")
+    freq.to_csv("./data/processed/stability_frequencies_priority7.csv")
     pd.Series(selected, name="selected_features7").to_csv("selected_features_priority7.csv", index=False)
 
     print("\n✅ Archivos generados:")
